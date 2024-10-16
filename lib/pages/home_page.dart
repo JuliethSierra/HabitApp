@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
 
   void saveNewHabit() {
     setState(() {
-      habitList.add([_controller.text, false]);
+      habitList.add(['0 Días completados',_controller.text, false]);
       _controller.clear();
     });
   }
