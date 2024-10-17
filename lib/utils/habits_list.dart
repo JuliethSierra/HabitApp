@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:habits_app/pages/habit_detail_page.dart'; // Asegúrate de importar la página del calendario.
+import 'package:habits_app/pages/habit_detail_page.dart';
 
 class HabitsList extends StatelessWidget {
   const HabitsList({
@@ -13,6 +13,8 @@ class HabitsList extends StatelessWidget {
     required this.deleteFunction,
     required this.icon,
     required this.backgroundColor,
+    required this.listDaysComplete,
+    required this.onUpdateDays, // Nuevo callback para actualizar días completados
   });
 
   final String daysCompleted;
@@ -23,6 +25,8 @@ class HabitsList extends StatelessWidget {
   final Function(BuildContext)? deleteFunction;
   final IconData icon;
   final Color backgroundColor;
+  final List<DateTime> listDaysComplete;
+  final Function(List<DateTime>) onUpdateDays; // Callback para pasar la lista actualizada
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +50,17 @@ class HabitsList extends StatelessWidget {
         ),
         child: GestureDetector(
           onTap: () {
+            // Abrimos la página de detalles y pasamos el callback para actualizar la lista
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => HabitDetailPage(habitName: habitName),
+                builder: (context) => HabitDetailPage(
+                  habitName: habitName,
+                  completedDays: listDaysComplete,
+                  onUpdateDays: (updatedDays) {
+                    onUpdateDays(updatedDays); // Devolvemos la lista actualizada al callback
+                  },
+                ),
               ),
             );
           },

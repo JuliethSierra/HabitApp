@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habits_app/models/habit.dart';
 import 'package:habits_app/utils/habits_list.dart';
 import 'package:habits_app/utils/icon_list.dart';
 
@@ -13,47 +14,34 @@ class _HomePageState extends State<HomePage> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  List habitList = [
-    [
-      '0 Días completados',
-      'Parcial',
-      'Estudiar 30 min para parcial',
-      false,
-      Colors.blue,
-      Icons.access_alarm_outlined
-    ],
-    [
-      '0 Días completados',
-      'Correr',
-      'Correr 10 min todos los días',
-      false,
-      Colors.green,
-      Icons.run_circle_outlined
-    ],
-    [
-      '0 Días completados',
-      'Leer un libro',
-      'Leer 20 paginas a diario',
-      false,
-      Colors.purple,
-      Icons.menu_book_outlined
-    ],
+  List<Habit> habitList = [
+    Habit('Parcial', 'Estudiar', false, Colors.blue, Icons.access_alarm_outlined, [
+    DateTime.utc(2024, 10, 1),
+    DateTime.utc(2024, 10, 5),
+    DateTime.utc(2024, 10, 10),
+    ]),
+    Habit('Correr', 'Correr 10 min todos los días', false, Colors.green, Icons.run_circle_outlined, [
+    DateTime.utc(2024, 10, 1),
+    DateTime.utc(2024, 10, 5),
+    DateTime.utc(2024, 10, 10),
+    ]),
+    Habit('Leer un libro', 'Leer 20 paginas a diario', false, Colors.purple, Icons.menu_book_outlined, [
+    DateTime.utc(2024, 10, 1),
+    DateTime.utc(2024, 10, 5),
+    DateTime.utc(2024, 10, 10),
+    ]),
   ];
 
   void checkBoxChanged(int index) {
     setState(() {
-      habitList[index][3] = !habitList[index][3];
+      habitList[index].completed = !habitList[index].completed;
     });
   }
 
   void saveNewHabit() {
     setState(() {
-      habitList.add([
-        '0 Días completados',
-        _nameController.text,
-        _descriptionController.text,
-        false
-      ]);
+      habitList.add(
+        Habit(_nameController.text, _descriptionController.text, false, Colors.purple, Icons.new_label, []));
       _nameController.clear();
       _descriptionController.clear();
     });
@@ -78,14 +66,20 @@ class _HomePageState extends State<HomePage> {
         itemCount: habitList.length,
         itemBuilder: (BuildContext context, index) {
           return HabitsList(
-            daysCompleted: habitList[index][0],
-            habitName: habitList[index][1],
-            habitDescription: habitList[index][2],
-            habitCompleted: habitList[index][3],
-            backgroundColor: habitList[index][4],
-            icon: habitList[index][5],
+            daysCompleted: ' ${habitList[index].completedDays.length} días completados',
+            habitName: habitList[index].name,
+            habitDescription: habitList[index].description,
+            habitCompleted: habitList[index].completed,
+            backgroundColor: habitList[index].color,
+            icon: habitList[index].icon,
+            listDaysComplete: habitList[index].completedDays,
             onChanged: (value) => checkBoxChanged(index),
             deleteFunction: (_) => deleteHabit(index),
+            onUpdateDays: (updatedDays) {
+              setState(() {
+                habitList[index].completedDays = updatedDays; // Actualizamos la lista de días completados
+              });
+            },
           );
         },
       ),
@@ -194,14 +188,9 @@ class _HomePageState extends State<HomePage> {
             ElevatedButton(
               onPressed: () {
                 setState(() {
-                  habitList.add([
-                    '0 Días completados',
-                    habitName,
-                    habitDescription,
-                    false,
-                    selectedColor,
-                    selectedIcon,
-                  ]);
+                  habitList.add(
+                    Habit(habitName, habitDescription, false, selectedColor, selectedIcon, []),
+                    );
                 });
                 Navigator.of(context).pop();
               },
