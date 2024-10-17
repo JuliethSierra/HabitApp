@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
         itemCount: habitList.length,
         itemBuilder: (BuildContext context, index) {
           return HabitsList(
-            daysCompleted: ' ${habitList[index].completedDays.length} días completados',
+            daysCompleted: ' ${habitList[index].calculateStreak(habitList[index].completedDays)} días completados',
             habitName: habitList[index].name,
             habitDescription: habitList[index].description,
             habitCompleted: habitList[index].completed,
@@ -89,6 +89,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
 
 // Método para abrir el diálogo y agregar un nuevo hábito
   void openAddHabitDialog() {
