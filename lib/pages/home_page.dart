@@ -13,22 +13,27 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final String profileImageUrl =
+      'https://st3.depositphotos.com/12985790/15794/i/450/depositphotos_157947226-stock-photo-man-looking-at-camera.jpg';
 
   List<Habit> habitList = [
-    Habit('Parcial', 'Estudiar', false, Colors.blue, Icons.access_alarm_outlined, [
-    DateTime.utc(2024, 10, 1),
-    DateTime.utc(2024, 10, 5),
-    DateTime.utc(2024, 10, 10),
+    Habit('Parcial', 'Estudiar', false, Colors.blue,
+        Icons.access_alarm_outlined, [
+      DateTime.utc(2024, 10, 1),
+      DateTime.utc(2024, 10, 5),
+      DateTime.utc(2024, 10, 10),
     ]),
-    Habit('Correr', 'Correr 10 min todos los días', false, Colors.green, Icons.run_circle_outlined, [
-    DateTime.utc(2024, 10, 1),
-    DateTime.utc(2024, 10, 5),
-    DateTime.utc(2024, 10, 10),
+    Habit('Correr', 'Correr 10 min todos los días', false, Colors.green,
+        Icons.run_circle_outlined, [
+      DateTime.utc(2024, 10, 1),
+      DateTime.utc(2024, 10, 5),
+      DateTime.utc(2024, 10, 10),
     ]),
-    Habit('Leer un libro', 'Leer 20 paginas a diario', false, Colors.purple, Icons.menu_book_outlined, [
-    DateTime.utc(2024, 10, 1),
-    DateTime.utc(2024, 10, 5),
-    DateTime.utc(2024, 10, 10),
+    Habit('Leer un libro', 'Leer 20 paginas a diario', false, Colors.purple,
+        Icons.menu_book_outlined, [
+      DateTime.utc(2024, 10, 1),
+      DateTime.utc(2024, 10, 5),
+      DateTime.utc(2024, 10, 10),
     ]),
   ];
 
@@ -40,8 +45,8 @@ class _HomePageState extends State<HomePage> {
 
   void saveNewHabit() {
     setState(() {
-      habitList.add(
-        Habit(_nameController.text, _descriptionController.text, false, Colors.purple, Icons.new_label, []));
+      habitList.add(Habit(_nameController.text, _descriptionController.text,
+          false, Colors.purple, Icons.new_label, []));
       _nameController.clear();
       _descriptionController.clear();
     });
@@ -58,45 +63,74 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Habit App'),
+        title: const Text(
+          'Habit App',
+          style: TextStyle(fontSize: 28),
+        ),
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
       ),
-      body: ListView.builder(
-        itemCount: habitList.length,
-        itemBuilder: (BuildContext context, index) {
-          return HabitsList(
-            daysCompleted: ' ${habitList[index].calculateStreak(habitList[index].completedDays)} días completados',
-            habitName: habitList[index].name,
-            habitDescription: habitList[index].description,
-            habitCompleted: habitList[index].completed,
-            backgroundColor: habitList[index].color,
-            icon: habitList[index].icon,
-            listDaysComplete: habitList[index].completedDays,
-            onChanged: (value) => checkBoxChanged(index),
-            deleteFunction: (_) => deleteHabit(index),
-            onUpdateDays: (updatedDays) {
-              setState(() {
-                habitList[index].completedDays = updatedDays; // Actualizamos la lista de días completados
-              });
-            },
-          );
-        },
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 40,
+                  backgroundImage: NetworkImage(profileImageUrl),
+                ),
+                const SizedBox(width: 50),
+                const Text(
+                  'Bienvenido Pachito',
+                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          const Divider(),
+          Expanded(
+            child: ListView.builder(
+              itemCount: habitList.length,
+              itemBuilder: (BuildContext context, index) {
+                return HabitsList(
+                  daysCompleted:
+                      ' ${habitList[index].calculateStreak(habitList[index].completedDays)} días completados',
+                  habitName: habitList[index].name,
+                  habitDescription: habitList[index].description,
+                  habitCompleted: habitList[index].completed,
+                  backgroundColor: habitList[index].color,
+                  icon: habitList[index].icon,
+                  listDaysComplete: habitList[index].completedDays,
+                  onChanged: (value) => checkBoxChanged(index),
+                  deleteFunction: (_) => deleteHabit(index),
+                  onUpdateDays: (updatedDays) {
+                    setState(() {
+                      habitList[index].completedDays =
+                          updatedDays; // Actualizamos la lista de días completados
+                    });
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: openAddHabitDialog,
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,
         child: const Icon(Icons.add),
       ),
     );
   }
-
 
 // Método para abrir el diálogo y agregar un nuevo hábito
   void openAddHabitDialog() {
     String habitName = '';
     String habitDescription = '';
     Color selectedColor = Colors.blue;
-    IconData selectedIcon = Icons.circle;
+    IconData selectedIcon = Icons.local_dining_outlined;
 
     showDialog(
       context: context,
@@ -156,9 +190,10 @@ class _HomePageState extends State<HomePage> {
                       Colors.red,
                       Colors.blue,
                       Colors.green,
-                      Colors.yellow,
+                      Colors.black,
                       Colors.purple,
                       Colors.orange,
+                      Colors.pink
                     ].map((color) {
                       return DropdownMenuItem(
                         value: color,
@@ -190,8 +225,9 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 setState(() {
                   habitList.add(
-                    Habit(habitName, habitDescription, false, selectedColor, selectedIcon, []),
-                    );
+                    Habit(habitName, habitDescription, false, selectedColor,
+                        selectedIcon, []),
+                  );
                 });
                 Navigator.of(context).pop();
               },

@@ -4,7 +4,8 @@ import 'package:table_calendar/table_calendar.dart';
 class HabitDetailPage extends StatefulWidget {
   final String habitName;
   final List<DateTime> completedDays;
-  final Function(List<DateTime>) onUpdateDays; // Recibimos el callback para actualizar los días completados
+  final Function(List<DateTime>)
+      onUpdateDays; // Recibimos el callback para actualizar los días completados
 
   const HabitDetailPage({
     super.key,
@@ -36,6 +37,7 @@ class _HabitDetailPageState extends State<HabitDetailPage> {
       appBar: AppBar(
         title: Text(widget.habitName),
         backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -82,21 +84,26 @@ class _HabitDetailPageState extends State<HabitDetailPage> {
             ElevatedButton(
               onPressed: () {
                 setState(() {
-                  if (!_completedDays.any((day) => isSameDay(day, _selectedDay))) {
+                  if (!_completedDays
+                      .any((day) => isSameDay(day, _selectedDay))) {
                     _completedDays.add(_selectedDay);
                   }
                 });
               },
-              child: const Text('Marcar Día Completado'),
+              child: const Text('Marcar Día Completado',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          widget.onUpdateDays(_completedDays); // Usamos el callback para devolver la lista actualizada
+          widget.onUpdateDays(
+              _completedDays); // Usamos el callback para devolver la lista actualizada
           Navigator.pop(context);
         },
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,
         child: const Icon(Icons.check),
       ),
     );
